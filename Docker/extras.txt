@@ -1,0 +1,7 @@
+Build:
+docker build -t mftdocker:latest .
+
+Run:
+docker run --name bwce-app -e APP_CONFIG_PROFILE=Docker -e BW_PROFILE=Docker --link consul-agent-node1:consulagent -e CONSUL_SERVER_URL=http://consulagent:8500 -e BW_LOGLEVEL=info -p 7443:7443 -d mftdocker:latest
+
+docker run --name bwce-app --network host -e APP_CONFIG_PROFILE=Docker -e BW_PROFILE=Docker -e CONSUL_SERVER_URL=http://172.16.22.131:8500 -e BW_LOGLEVEL=info -p 7443:7443 -d mftdocker:latest

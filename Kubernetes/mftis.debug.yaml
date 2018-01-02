@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mftis-svc
+  labels:
+    app: mftis-svc
+spec:
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 7443
+    targetPort: http-ui
+    nodePort: 30091
+  selector:
+    app: mftis
+    tier: backend
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: mftis-dply
+  labels:
+    app: mftis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mftis
+  template:
+    metadata:
+      labels:
+        app: mftis
+        tier: backend
+    spec:
+      containers:
+      - name: mftis
+        image: mftdocker:8.0
+        ports:
+        - name: http-ui
+          containerPort: 7443
+        - name: ftp
+          containerPort: 21
+        - name: sftp
+          containerPort: 23
+        - name: ftps
+          containerPort: 990
+        - name: cfi
+          containerPort: 46464
+        command: ["/bin/sh"]
+        args: ["-c", "while true; do echo hello; sleep 10;done"]
+        env:
+          - name: APP_CONFIG_PROFILE
+            value: "Docker"
+          - name: BW_PROFILE
+            value: "Docker"
+          - name: CONSUL_SERVER_URL
+            value: "http://172.16.22.134:30090"
+          - name: BW_LOGLEVEL
+            value: "INFO"

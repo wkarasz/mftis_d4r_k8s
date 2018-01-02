@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mftis-svc
+  labels:
+    app: mftis-svc
+spec:
+  type: NodePort
+  ports:
+  - name: http-ui-svc
+    protocol: TCP
+    port: 7443
+    targetPort: http-ui
+    nodePort: 30091
+  - name: ftp-svc
+    protocol: TCP
+    port: 21
+    targetPort: ftp
+    nodePort: 30092 
+  selector:
+    app: mftis
+    tier: backend

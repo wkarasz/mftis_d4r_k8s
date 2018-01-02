@@ -1,0 +1,81 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mftis-svc
+  labels:
+    app: mftis-svc
+spec:
+  type: NodePort
+  ports:
+  - name: http-ui-svc
+    protocol: TCP
+    port: 7443
+    targetPort: http-ui
+    nodePort: 30091
+  - name: ftp-svc
+    protocol: TCP
+    port: 21
+    targetPort: ftp
+    nodePort: 30092
+  - name: sftp-svc
+    protocol: TCP
+    port: 23
+    targetPort: sftp
+    nodePort: 30093
+  - name: ftps-svc
+    protocol: TCP
+    port: 990
+    targetPort: ftps
+    nodePort: 30094
+  - name: cfi-svc
+    protocol: TCP
+    port: 46464
+    targetPort: cfi
+    nodePort: 30095
+  selector:
+    app: mftis
+    tier: backend
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: mftis-dply
+  labels:
+    app: mftis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mftis
+  template:
+    metadata:
+      labels:
+        app: mftis
+        tier: backend
+    spec:
+      containers:
+      - name: mftis
+        image: mftdocker:8.0
+        ports:
+        - name: http-ui
+          containerPort: 7443
+        - name: ftp
+          containerPort: 21
+        - name: sftp
+          containerPort: 23
+        - name: ftps
+          containerPort: 990
+        - name: cfi
+          containerPort: 46464
+        env:
+          - name: APP_CONFIG_PROFILE
+            value: "Docker"
+          - name: BW_PROFILE
+            value: "Docker"
+          - name: CONSUL_SERVER_URL
+            value: "http://172.16.22.139:30090"
+          - name: BW_LOGLEVEL
+            value: "INFO"
+        resources:
+          requests:
+            memory: "1024Mi"
