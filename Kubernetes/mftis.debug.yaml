@@ -34,7 +34,7 @@ spec:
     spec:
       containers:
       - name: mftis
-        image: mftdocker:8.0
+        image: tibco/mftis:8.0
         ports:
         - name: http-ui
           containerPort: 7443
