@@ -6,6 +6,7 @@ metadata:
     app: mftis-svc
 spec:
   type: NodePort
+  sessionAffinity: ClientIP
   ports:
   - name: http-ui-svc
     protocol: TCP
@@ -73,9 +74,9 @@ spec:
           - name: BW_PROFILE
             value: "Docker"
           - name: CONSUL_SERVER_URL
-            value: "http://172.16.22.139:30090"
+            value: "http://172.16.22.130:30090"
           - name: BW_LOGLEVEL
             value: "INFO"
         resources:
           requests:
-            memory: "1024Mi"
+            memory: "1256Mi"

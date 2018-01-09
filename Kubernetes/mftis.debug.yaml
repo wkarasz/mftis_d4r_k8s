@@ -6,6 +6,7 @@ metadata:
     app: mftis-svc
 spec:
   type: NodePort
+  sessionAffinity: ClientIP
   ports:
   - protocol: TCP
     port: 7443
